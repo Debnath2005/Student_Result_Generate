@@ -39,9 +39,10 @@ function displayMenu(){
         1) Take Test
         2) View Result
         3) View Students Result
+        4) View classwise result
       `);
     
-       choice = readline.question('Enter your choice (1, 2, or 3): ');
+       choice = readline.question('Enter your choice (1, 2, 3 or 4): ');
     
       switch(choice) {
         case '1':
@@ -55,6 +56,10 @@ function displayMenu(){
         case '3':
           console.log("You selected: View Students Result");
           handleViewResult()
+          break;
+        case '4':
+          console.log("You selected: View Classwise Result");
+          handleViewClasswiseResult()
           break;
         default:
           console.log("Invalid choice! Please select a valid option.");
@@ -109,19 +114,47 @@ function handleGenerateResult(){
 
 function handleViewResult(){
     if(student[0].total_mark){
-    console.log(`
+console.log(`
 +----------+--------------------+---------+----------------+------------+
 | roll_no  |        Name        |  class  |  Total Marks   | Percentage |
-+----------+--------------------+---------+----------------+------------+`
-    );
++----------+--------------------+---------+----------------+------------+`);
             
         student.forEach(stu => {
             console.log(`| ${String(stu.roll_no).padEnd(8)} | ${stu.name.padEnd(18)} | ${String(stu.class).padEnd(7)} | ${String(stu.total_mark).padEnd(14)} | ${String(stu.percentage).padEnd(10)} |`);
         });
         console.log("+----------+--------------------+---------+----------------+------------+");
+        displayMenu()
     }
     else{
          console.log("To generate result, first you have to take test");
          displayMenu()    
     }
+}
+
+function  handleViewClasswiseResult(){
+    if(student[0].total_mark){
+        let classNo= readline.question('which class Result you want to see(1 to 5): ');
+        if(classNo>=1 && classNo<=5){
+            console.log(`
++----------+--------------------+---------+----------------+------------+
+| roll_no  |        Name        |  class  |  Total Marks   | Percentage |
++----------+--------------------+---------+----------------+------------+`
+                        );
+                                
+                            student.forEach(stu => {
+                                if(stu.class==classNo){
+                                    console.log(`| ${String(stu.roll_no).padEnd(8)} | ${stu.name.padEnd(18)} | ${String(stu.class).padEnd(7)} | ${String(stu.total_mark).padEnd(14)} | ${String(stu.percentage).padEnd(10)} |`);
+                                } 
+                            });
+                            console.log("+----------+--------------------+---------+----------------+------------+");
+                        }
+                    else{
+                        console.log("Wrong choice !!! Try Again"); 
+                    }
+        }
+        
+        else{
+             console.log("To generate result, first you have to take test");
+             displayMenu()    
+        }
 }
