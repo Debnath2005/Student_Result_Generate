@@ -105,3 +105,23 @@ function handleGenerateResult(){
     console.log(student);
     displayMenu()
 }
+
+
+function handleViewResult(){
+    if(student[0].total_mark){
+    console.log(`
++----------+--------------------+---------+----------------+------------+
+| roll_no  |        Name        |  class  |  Total Marks   | Percentage |
++----------+--------------------+---------+----------------+------------+`
+    );
+            
+        student.forEach(stu => {
+            console.log(`| ${String(stu.roll_no).padEnd(8)} | ${stu.name.padEnd(18)} | ${String(stu.class).padEnd(7)} | ${String(stu.total_mark).padEnd(14)} | ${String(stu.percentage).padEnd(10)} |`);
+        });
+        console.log("+----------+--------------------+---------+----------------+------------+");
+    }
+    else{
+         console.log("To generate result, first you have to take test");
+         displayMenu()    
+    }
+}
