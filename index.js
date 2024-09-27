@@ -67,8 +67,6 @@ displayMenu()
 function randomMark(){
     return Math.floor(Math.random()*100)
 }
-//console.log(randomMark());
-
 
 let subject=["Math","physics","chemistry"]
 
@@ -82,6 +80,27 @@ function handleTakeTest(){
             testScores.push(obj);
         }
        student[i].test_score.push(...testScores)
+    }
+    console.log(student);
+    displayMenu()
+}
+
+var total_mark=0
+var percentage=0
+
+function handleGenerateResult(){
+    if(student[0].test_score.length==0){
+        console.log("To View Result, First you have to take Test");
+        displayMenu() 
+    }
+    else{
+        for(let i=0;i<student.length;i++){
+                total_mark=student[i].test_score[0].Math + student[i].test_score[1].physics + student[i].test_score[2].chemistry
+                student[i].total_mark=total_mark
+                percentage=Math.floor(total_mark/3);
+                student[i].percentage=percentage
+        }
+ 
     }
     console.log(student);
     displayMenu()
