@@ -64,3 +64,25 @@ function displayMenu(){
 }
 displayMenu()
 
+function randomMark(){
+    return Math.floor(Math.random()*100)
+}
+//console.log(randomMark());
+
+
+let subject=["Math","physics","chemistry"]
+
+function handleTakeTest(){
+    let subject=["Math","physics","chemistry"]
+    for(let i=0;i<student.length;i++){
+        let testScores = [];
+        for (let j = 0; j < subject.length; j++) {
+            let score = randomMark();  // Assuming randomMark() generates a random score
+            let obj = { [subject[j]]: score };  // Dynamic key assignment
+            testScores.push(obj);
+        }
+       student[i].test_score.push(...testScores)
+    }
+    console.log(student);
+    displayMenu()
+}
