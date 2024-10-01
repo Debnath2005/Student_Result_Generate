@@ -40,9 +40,11 @@ function displayMenu(){
         2) View Result
         3) View Students Result
         4) View classwise result
+        5) Detail Analysis of Result
+        6) View Top Three performer classwise
       `);
     
-       choice = readline.question('Enter your choice (1, 2, 3 or 4): ');
+       choice = readline.question('Enter your choice (1, 2, 3, 4, 5 or 6): ');
     
       switch(choice) {
         case '1':
@@ -61,6 +63,11 @@ function displayMenu(){
           console.log("You selected: View Classwise Result");
           handleViewClasswiseResult()
           break;
+        case '5':
+            console.log("You selected: View Detail Analysis of Result");
+            //handleDetailAnalysisResult()
+            handleDetailAnalysisResult()
+            break;
         default:
           console.log("Invalid choice! Please select a valid option.");
           displayMenu(); 
@@ -80,18 +87,19 @@ function handleTakeTest(){
     for(let i=0;i<student.length;i++){
         let testScores = [];
         for (let j = 0; j < subject.length; j++) {
-            let score = randomMark();  // Assuming randomMark() generates a random score
-            let obj = { [subject[j]]: score };  // Dynamic key assignment
+            let score = randomMark();  
+            let obj = { [subject[j]]: score };  
             testScores.push(obj);
         }
        student[i].test_score.push(...testScores)
     }
-    console.log(student);
+     console.log(student);
     displayMenu()
 }
 
 var total_mark=0
 var percentage=0
+
 
 function handleGenerateResult(){
     if(student[0].test_score.length==0){
@@ -157,4 +165,83 @@ function  handleViewClasswiseResult(){
              console.log("To generate result, first you have to take test");
              displayMenu()    
         }
+        displayMenu()
 }
+
+
+
+
+
+// ----------------------------------UC4------------------------------------
+
+function handleDetailAnalysisResult(){
+    const classResults = {};
+
+  // Group students by class
+  student.forEach((stu) => {
+    const studentClass = stu.class;
+
+    // Initialize if the class is not present in classResults
+    if (!classResults[studentClass]) {
+      classResults[studentClass] = {
+        totalStudents: 0,
+        totalMarks: 0,
+        totalPercentage: 0,
+        failedCount: 0,
+      };
+    }
+
+    // Update class statistics
+    classResults[studentClass].totalStudents++;
+    classResults[studentClass].totalMarks += stu.total_mark;
+    classResults[studentClass].totalPercentage += stu.percentage;
+
+    // Check if the student failed (assuming pass mark is 40%)
+    if (stu.percentage < 40) {
+      classResults[studentClass].failedCount++;
+    }
+  });
+
+  console.log(`
++-------+--------------+------------------+--------------+-------+------------+------------+-------------+----------+
+| Class | Total_student| Avg. total_marks | Avg. perc(%) | grade | fail count |fail count %| passed count| passed % |
++-------+--------------+------------------+--------------+-------+------------+------------+-------------+----------+`
+                );
+
+
+  // Process each class and calculate the statistics
+  for (const studentClass in classResults) {
+    const result = classResults[studentClass];
+    const totalStudents = result.totalStudents;
+    const failedCount = result.failedCount;
+    const passedCount = totalStudents - failedCount;
+
+    // Calculate average total marks and average percentage
+    const avgTotalMarks = result.totalMarks / totalStudents;
+    const avgPercentage = result.totalPercentage / totalStudents;
+
+    // Determine overall grade for the class based on average percentage
+    let overallGrade = '';
+    if (avgPercentage >= 90) {
+      overallGrade = 'A+';
+    } else if (avgPercentage >= 80) {
+      overallGrade = 'A';
+    } else if (avgPercentage >= 70) {
+      overallGrade = 'B';
+    } else if (avgPercentage >= 60) {
+      overallGrade = 'C';
+    } else {
+      overallGrade = 'D';
+    }
+
+    // Calculate failed and passed student percentages
+    const failedPercentage = (failedCount / totalStudents) * 100;
+    const passedPercentage = 100 - failedPercentage;
+
+ console.log(`|${studentClass.padEnd(7)}|  ${String(totalStudents).padEnd(11)} |  ${String(avgTotalMarks.toFixed(2)).padEnd(15)} | ${String(avgPercentage.toFixed(2)).padEnd(12)} | ${String(overallGrade).padEnd(5)} | ${String(failedCount).padEnd(11)}| ${String((failedPercentage.toFixed(2)).padEnd(10))} |  ${String(passedCount).padEnd(10)} | ${String((passedPercentage.toFixed(2))).padEnd(8)} | `);
+  }
+  console.log("+-------+--------------+------------------+--------------+-------+------------+------------+-------------+----------+");
+
+  displayMenu()
+}
+
