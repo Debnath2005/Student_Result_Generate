@@ -68,6 +68,10 @@ function displayMenu(){
             //handleDetailAnalysisResult()
             handleDetailAnalysisResult()
             break;
+        case '6':
+          console.log("You selected: View Top Three performer classwise");
+          handleTopThreePerformer()
+          break;
         default:
           console.log("Invalid choice! Please select a valid option.");
           displayMenu(); 
@@ -245,3 +249,32 @@ function handleDetailAnalysisResult(){
   displayMenu()
 }
 
+
+// ----------------------------------UC5---------------------------------------------------
+
+function handleTopThreePerformer(){
+  const classWiseStudents = {};
+
+  student.forEach((stu) => {
+    const studentClass = stu.class;
+    
+    if (!classWiseStudents[studentClass]) {
+      classWiseStudents[studentClass] = [];
+    }
+    classWiseStudents[studentClass].push(stu);
+  });
+
+  for (const studentClass in classWiseStudents) {
+    const studentsInClass = classWiseStudents[studentClass];
+    const sortedStudents = studentsInClass.sort((a, b) => b.totalMarks - a.totalMarks);
+    console.log(`
++-------------+-------------+-------------------------+--------------------+--------------+
+|    Class    |   Roll No.  |        Name             |   Total Marks      |  Percentage  |
++-------------+-------------+-------------------------+--------------------+--------------+`);
+   const topStudent=sortedStudents.slice(0, 3);
+    topStudent.forEach((student, index) => {
+      console.log(`|${String(studentClass).padEnd(13)}|${String(student.roll_no).padEnd(13)}|  ${String(student.name).padEnd(22)} |  ${String(student.total_mark).padEnd(17)} | ${String(student.percentage).padEnd(13)}|`)
+    });
+console.log("+-------------+-------------+-------------------------+--------------------+--------------+");
+  }
+}
